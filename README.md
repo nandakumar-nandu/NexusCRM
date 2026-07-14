@@ -75,12 +75,12 @@ graph TD
     Root --> TopBar[Top Bar Panel]
     Root --> Wrapper[Page Content Wrapper]
     
-    Sidebar --> |Navigates| Dash[Dashboard: "/"]
-    Sidebar --> |Navigates| Cust[Customers: "/customers"]
-    Sidebar --> |Navigates| Leads[Leads: "/leads"]
-    Sidebar --> |Navigates| Tasks[Tasks: "/tasks"]
-    Sidebar --> |Navigates| Reps[Reports: "/reports"]
-    Sidebar --> |Navigates| Sett[Settings: "/settings"]
+    Sidebar --> |Navigates| Dash["Dashboard (/)"]
+    Sidebar --> |Navigates| Cust["Customers (/customers)"]
+    Sidebar --> |Navigates| Leads["Leads (/leads)"]
+    Sidebar --> |Navigates| Tasks["Tasks (/tasks)"]
+    Sidebar --> |Navigates| Reps["Reports (/reports)"]
+    Sidebar --> |Navigates| Sett["Settings (/settings)"]
     
     Wrapper --> Dash
     Wrapper --> Cust

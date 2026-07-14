@@ -41,12 +41,12 @@ graph TD
     RootLayout --> Sidebar[Sidebar Panel]
     RootLayout --> Page[Page Viewer]
     
-    Sidebar -->|Navigate| P1[Dashboard Page: "/"]
-    Sidebar -->|Navigate| P2[Customers Page: "/customers"]
-    Sidebar -->|Navigate| P3[Leads Page: "/leads"]
-    Sidebar -->|Navigate| P4[Tasks Page: "/tasks"]
-    Sidebar -->|Navigate| P5[Reports Page: "/reports"]
-    Sidebar -->|Navigate| P6[Settings Page: "/settings"]
+    Sidebar -->|Navigate| P1["Dashboard Page (/)"]
+    Sidebar -->|Navigate| P2["Customers Page (/customers)"]
+    Sidebar -->|Navigate| P3["Leads Page (/leads)"]
+    Sidebar -->|Navigate| P4["Tasks Page (/tasks)"]
+    Sidebar -->|Navigate| P5["Reports Page (/reports)"]
+    Sidebar -->|Navigate| P6["Settings Page (/settings)"]
     
     P1 -->|Add Lead| P3
     P2 -->|Select Account| P4
