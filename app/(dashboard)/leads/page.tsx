@@ -347,9 +347,37 @@ export default function LeadsPage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-16 text-crm-muted text-sm">
-          Loading pipeline datasets...
-        </div>
+        viewMode === 'kanban' ? (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5 animate-pulse">
+            {PIPELINE_STAGES.map((stage) => (
+              <div key={stage} className="glass-panel rounded-xl p-4 bg-crm-cardHover/10 border border-crm-border/10 space-y-4">
+                <div className="flex justify-between items-center pb-2 border-b border-crm-border/10">
+                  <div className="h-4.5 w-16 bg-crm-cardHover/50 rounded" />
+                  <div className="h-4 w-6 bg-crm-cardHover/60 rounded" />
+                </div>
+                {[1, 2].map((i) => (
+                  <div key={i} className="glass-panel h-36 rounded-lg p-3 bg-crm-cardHover/20 border border-crm-border/10 flex flex-col justify-between" />
+                ))}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="border border-crm-border/40 bg-crm-card/20 rounded-xl overflow-hidden animate-pulse">
+            <div className="bg-crm-cardHover/30 h-10 w-full border-b border-crm-border/30" />
+            <div className="divide-y divide-crm-border/30">
+              {Array.from({ length: 5 }).map((_, idx) => (
+                <div key={idx} className="h-14 w-full flex items-center justify-between px-6">
+                  <div className="h-4.5 w-32 bg-crm-cardHover/60 rounded" />
+                  <div className="h-4 w-28 bg-crm-cardHover/40 rounded" />
+                  <div className="h-4 w-16 bg-crm-cardHover/40 rounded" />
+                  <div className="h-4 w-12 bg-crm-cardHover/40 rounded" />
+                  <div className="h-4 w-20 bg-crm-cardHover/50 rounded" />
+                  <div className="h-6 w-6 bg-crm-cardHover/30 rounded" />
+                </div>
+              ))}
+            </div>
+          </div>
+        )
       ) : viewMode === 'kanban' ? (
         /* KANBAN BOARD VIEW */
         <DndContext sensors={sensors} onDragEnd={handleDragEnd}>

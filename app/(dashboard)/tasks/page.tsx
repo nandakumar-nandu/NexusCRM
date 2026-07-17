@@ -281,8 +281,24 @@ export default function TasksPage() {
       </div>
 
       {loading ? (
-        <div className="text-center py-16 text-crm-muted text-sm">
-          Loading tasks list...
+        <div className="glass-panel rounded-xl divide-y divide-crm-border/40 overflow-hidden animate-pulse">
+          {Array.from({ length: 5 }).map((_, idx) => (
+            <div key={idx} className="flex items-center justify-between gap-4 p-5">
+              <div className="flex items-center gap-3 flex-1">
+                <div className="h-5 w-5 bg-crm-cardHover/40 rounded" />
+                <div className="space-y-1.5 flex-1 max-w-sm">
+                  <div className="h-4 w-2/3 bg-crm-cardHover/50 rounded" />
+                  <div className="h-3 w-1/2 bg-crm-cardHover/30 rounded" />
+                </div>
+              </div>
+              <div className="flex items-center gap-6">
+                <div className="h-5 w-16 bg-crm-cardHover/40 rounded-full" />
+                <div className="h-4 w-20 bg-crm-cardHover/40 rounded" />
+                <div className="h-6 w-6 bg-crm-cardHover/40 rounded-full" />
+                <div className="h-5 w-5 bg-crm-cardHover/30 rounded" />
+              </div>
+            </div>
+          ))}
         </div>
       ) : (
         /* Task List Container */

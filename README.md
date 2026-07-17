@@ -152,6 +152,9 @@ graph TD
     Wrapper --> Tasks
     Wrapper --> Reps
     Wrapper --> Sett
+    
+    Cust --> |Click customer row| CustDet["Customer Profile (/customers/[id])"]
+    Root -.-> |Connection drop fallback| Offline["Offline Page (/offline)"]
 ```
 
 ---

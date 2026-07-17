@@ -299,11 +299,34 @@ export default function CustomersPage() {
             </thead>
             <tbody className="divide-y divide-crm-border/50">
               {loading ? (
-                <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-crm-muted">
-                    Loading customers data...
-                  </td>
-                </tr>
+                Array.from({ length: 5 }).map((_, idx) => (
+                  <tr key={idx} className="animate-pulse">
+                    <td className="px-6 py-4">
+                      <div className="h-4.5 w-32 bg-crm-cardHover/60 rounded" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 w-28 bg-crm-cardHover/40 rounded" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 w-40 bg-crm-cardHover/40 rounded" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 w-24 bg-crm-cardHover/40 rounded" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-5 w-16 bg-crm-cardHover/50 rounded-full" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-1.5">
+                        <div className="h-4 w-12 bg-crm-cardHover/35 rounded" />
+                        <div className="h-4 w-10 bg-crm-cardHover/35 rounded" />
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="h-6 w-6 bg-crm-cardHover/40 rounded ml-auto" />
+                    </td>
+                  </tr>
+                ))
               ) : customers.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-6 py-8 text-center text-crm-muted">

@@ -24,8 +24,8 @@ A **Customer Relationship Management (CRM)** platform is a software system desig
 | **Customer Directory** | A central repository for company accounts, email records, and phones. | ✅ Active (Full CRUD, Search, RLS) |
 | **Leads Kanban Board** | Visual board organizing deals by sales stages (New, Proposal, Negotiation). | ✅ Active (Drag & Drop, Tables) |
 | **Task Scheduler** | Focus-oriented tracker for pending tasks, alerts, and customer check-ins. | ✅ Active (Full CRUD, Filters, RLS) |
-| **Reports & Charts** | Bar graphs representing revenue progression and category breakdowns. | 🚧 UI Scaffold (Static Mock) |
-| **Settings Panel** | Form panels to manage user accounts and profile metadata. | ✅ Active (Auth Meta Updates) |
+| **Reports & Charts** | Bar graphs representing revenue progression and category breakdowns. | ✅ Active (Integrated in Dashboard Overview) |
+| **Settings Panel** | Form panels to manage user accounts, display profile metadata, and switch roles. | ✅ Active (Profile details, database state, role testing switcher) |
 
 *(Note: 🚧 indicates that frontend layout interfaces are established, with database sync operations and interactive hooks planned for future commits)*
 

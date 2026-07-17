@@ -2,6 +2,24 @@
 
 All notable changes to the NexusCRM project will be documented in this file.
 
+## [1.0.0] - 2026-07-17 19:35
+
+### Added
+- Root global error boundaries (`/app/error.tsx` and `/app/(dashboard)/error.tsx`) to intercept component rendering crashes gracefully with diagnostic logging and retry buttons.
+- High-fidelity visual skeleton loading states (`animate-pulse`) across all tabular listing pages (Customers, Leads list, Tasks checklist) and analytics charts (KPI cards, bar/donut/line charts) replacing standard spinners.
+- Thoroughly documented environment variables template `.env.example`.
+- Completed all project technical walkthroughs and screen tours detailing PWA support, CSV exports, role access checks, and databases.
+
+## [0.7.0] - 2026-07-17 19:30
+
+### Added
+- Local and Supabase-based client-side role verification service (`/lib/services/roleService.ts`).
+- Database migration script `/lib/db/004_roles.sql` defining `public.user_roles` lookup table and corresponding RLS policies for Viewer (read-only), Manager (edit, no delete), and Admin (full control) roles.
+- Dynamic visual interface changes according to active role: hiding additions and deletes for viewers, and hiding deletes for managers.
+- Settings page role testing switcher dropdown for sandbox evaluation.
+- Browser-side CSV Data Export buttons on Customers and Leads page tables powered by `papaparse` library.
+- Progressive Web App (PWA) configuration with `next-pwa`, complete manifest properties, custom app icons, and WiFi disconnect offline fallback route `/offline`.
+
 ## [0.6.0] - 2026-07-17 19:15
 
 ### Added
