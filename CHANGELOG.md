@@ -2,6 +2,15 @@
 
 All notable changes to the NexusCRM project will be documented in this file.
 
+## [0.5.0] - 2026-07-17 19:00
+
+### Added
+- SQL migration script `/lib/db/003_tasks.sql` creating tasks and customer_notes tables, defining FK constraints, RLS policies, and indexes.
+- Modular client-side tasks and notes service layer `/lib/services/tasksService.ts` supporting task CRUD, task completion toggling, and customer notes additions with sandbox offline overrides.
+- Fully-featured checklist view `/app/(dashboard)/tasks/page.tsx` with filter controls (active, completed, priority levels) and overdue items highlighted in red.
+- Linked Customer Details page `/app/(dashboard)/customers/[id]/page.tsx` including profile information headers, related leads panels, inline notes addition forms, and a unified chronological activity timeline (notes, tasks, opportunities).
+- Clickable link triggers in `/app/(dashboard)/customers/page.tsx` mapping customer row contact names to detail pages.
+
 ## [0.4.0] - 2026-07-17 16:10
 
 ### Added

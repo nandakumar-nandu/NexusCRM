@@ -23,7 +23,7 @@ A **Customer Relationship Management (CRM)** platform is a software system desig
 | **Dashboard Metrics** | Consolidated view of customer counts, active leads, tasks, and sales value. | 🚧 UI Scaffold (Static Mock) |
 | **Customer Directory** | A central repository for company accounts, email records, and phones. | ✅ Active (Full CRUD, Search, RLS) |
 | **Leads Kanban Board** | Visual board organizing deals by sales stages (New, Proposal, Negotiation). | ✅ Active (Drag & Drop, Tables) |
-| **Task Scheduler** | Focus-oriented tracker for pending tasks, alerts, and customer check-ins. | 🚧 UI Scaffold (Static Mock) |
+| **Task Scheduler** | Focus-oriented tracker for pending tasks, alerts, and customer check-ins. | ✅ Active (Full CRUD, Filters, RLS) |
 | **Reports & Charts** | Bar graphs representing revenue progression and category breakdowns. | 🚧 UI Scaffold (Static Mock) |
 | **Settings Panel** | Form panels to manage user accounts and profile metadata. | ✅ Active (Auth Meta Updates) |
 
@@ -67,6 +67,20 @@ Sales agents track negotiations using an interactive **Kanban Board** pipeline o
 3. **Alternative List View**: Toggles to a structured table listing deal names, linked client names, valuations, close target deadlines, and status levels.
 4. **Opportunity Form Modals**: Manage deal entries using Zod validation. Features customer selectors and custom range sliders for closing probabilities.
 5. **Row-Level Security (RLS) & Indexes**: Mapped with queries indexes on `customer_id`, `created_by`, and `stage` for pagination performance. Protected by Row-Level Security policies.
+
+
+---
+
+## Tasks & Customer Activity Timeline
+
+NexusCRM provides a centralized **Tasks Checklist** dashboard and a comprehensive **Customer Activity Timeline** tracking tool.
+
+### Features & Architecture:
+1. **Tasks Checklist Dashboard**: Accessible at `/tasks`. Organizes follow-ups, contract preparations, and meeting alerts. Users can search and filter tasks by priority levels (Low, Medium, High) and status (Active, Completed, All).
+2. **Task Card Indicators**: Render assignee avatars, priority badges, linked entities (Customer or Deal), and target due dates. Overdue tasks are highlighted in red for immediate visual feedback.
+3. **Task Entity Linkage**: Tasks are created with mandatory customer profiles and optional sales opportunity linkages.
+4. **Chronological Activity Timeline**: Rendered on the Customer Detail view (`/customers/[id]`), this panel aggregates linked customer notes, tasks creation/completion timestamps, and deal creation records in reverse chronological order.
+5. **Add Customer Note**: Form elements let reps save custom notes directly onto the customer's timeline in real-time.
 
 ---
 

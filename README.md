@@ -61,6 +61,7 @@ erDiagram
     CUSTOMERS ||--o{ LEADS : owns
     CUSTOMERS ||--o{ TASKS : references
     LEADS ||--o{ TASKS : references
+    CUSTOMERS ||--o{ CUSTOMER_NOTES : references
     
     CUSTOMERS {
         uuid id PK
@@ -81,18 +82,25 @@ erDiagram
         uuid customer_id FK
         numeric value
         string stage
-        string owner
-        string status
+        uuid created_by FK
         timestamp created_at
     }
     TASKS {
         uuid id PK
         string title
-        uuid lead_id FK
         uuid customer_id FK
-        string due_date
+        uuid lead_id FK
+        date due_date
         string priority
         boolean completed
+        uuid created_by FK
+        timestamp created_at
+    }
+    CUSTOMER_NOTES {
+        uuid id PK
+        uuid customer_id FK
+        string content
+        uuid created_by FK
         timestamp created_at
     }
 ```

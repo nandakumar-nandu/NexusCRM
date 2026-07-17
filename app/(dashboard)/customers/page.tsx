@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -256,7 +257,9 @@ export default function CustomersPage() {
                 customers.map((customer) => (
                   <tr key={customer.id} className="group transition-colors duration-150 hover:bg-crm-cardHover/15">
                     <td className="px-6 py-4 font-semibold text-white">
-                      {customer.name}
+                      <Link href={`/customers/${customer.id}`} className="hover:text-crm-primary hover:underline transition-colors">
+                        {customer.name}
+                      </Link>
                     </td>
                     <td className="px-6 py-4">
                       <span className="flex items-center gap-1.5 text-crm-muted group-hover:text-slate-200 transition-colors">

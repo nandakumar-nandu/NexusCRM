@@ -20,6 +20,11 @@ This tour describes the layout screens available in this initial scaffold versio
    - **Add Customer Modal**: Pop-up card rendering validated input forms (name, company, email, phone, status, tags, and notes).
    - **Edit Customer Panel**: Slide-over right drawer panel populated with loaded fields to edit records.
 
+3.1. **Customer Detail Page (`/customers/[id]`)**
+   - **Main Display**: Customer info header with initials avatar, status badge, email/phone contact links, and custom tags. Chronological activity timeline displaying customer notes, task creation/completion milestones, and deal opportunity stages. Side panel lists related active deals and summary profile notes.
+   - **Timeline Interactions**: Interactive checkbox toggling to complete tasks.
+   - **Primary Action**: "Add Note" inline form to post interaction logs instantly on the chronological timeline, and "Create New Deal" shortcut link.
+
 4. **Leads Kanban Board (`/leads`)**
    - **Main Display**: 5 columns grouping deal stages (New, Contacted, Qualified, Proposal, Closed) with dynamically aggregated values. Individual cards display title, company name, value, target date, and closing probability.
    - **Drag & Drop Interactions**: Representatives drag cards between columns to change opportunity stages. The interface leverages `@dnd-kit` mouse distance sensors to differentiate drag intents from simple card clicks.
@@ -27,8 +32,10 @@ This tour describes the layout screens available in this initial scaffold versio
    - **Primary Action**: "Create Deal" button (opens Zod-validated creation modal), card action controls (opens edit modals or delete prompts).
 
 5. **Tasks Checklist (`/tasks`)**
-   - **Main Display**: Action items table showing checkbox status, linked client accounts, deadlines, and urgency level indicators.
-   - **Primary Action**: "New Task" button and tab filter buttons.
+   - **Main Display**: Checklist item rows displaying complete status checkbox, linked customer profiles, linked deal names, target due dates, priority level pills, and assignee profile avatars.
+   - **Interactive Elements**: Overdue, incomplete tasks are marked with bold red borders and warning pills.
+   - **Filter Controls**: Search input matches task details, tabs filter by status (Active, Completed, All), and buttons switch priority tiers (All, Low, Medium, High).
+   - **Primary Action**: "New Task" button to open Zod-validated modal form, checklist toggles to toggle complete states, and delete action triggers.
 
 6. **Reports & Analytics (`/reports`)**
    - **Main Display**: Bar charts reflecting monthly revenue progression and category breakdowns.

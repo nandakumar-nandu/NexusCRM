@@ -10,7 +10,6 @@ import {
   useSensors, 
   MouseSensor, 
   TouchSensor, 
-  KeyboardSensor, 
   useDroppable, 
   useDraggable, 
   DragEndEvent 
@@ -44,9 +43,9 @@ import {
 const leadFormSchema = z.object({
   title: z.string().min(2, "Title must be at least 2 characters"),
   customer_id: z.string().min(1, "Please select a customer"),
-  value: z.coerce.number().min(0, "Value must be a positive number"),
+  value: z.number().min(0, "Value must be a positive number"),
   stage: z.enum(['New', 'Contacted', 'Qualified', 'Proposal', 'Closed']),
-  probability: z.coerce.number().min(0).max(100, "Probability must be between 0 and 100"),
+  probability: z.number().min(0).max(100, "Probability must be between 0 and 100"),
   expected_close_date: z.string().min(1, "Expected close date is required"),
   notes: z.string().optional()
 });
@@ -489,7 +488,7 @@ export default function LeadsPage() {
                   <input
                     type="number"
                     step="0.01"
-                    {...register("value")}
+                    {...register("value", { valueAsNumber: true })}
                     className="w-full rounded-lg border border-crm-border bg-crm-card/50 px-3.5 py-2 text-sm text-white outline-none focus:border-crm-primary"
                   />
                   {errors.value && <p className="text-[11px] text-rose-400 mt-0.5">{errors.value.message}</p>}
@@ -534,7 +533,7 @@ export default function LeadsPage() {
                     min="0"
                     max="100"
                     step="5"
-                    {...register("probability")}
+                    {...register("probability", { valueAsNumber: true })}
                     className="w-full h-1.5 bg-crm-border/60 rounded-lg appearance-none cursor-pointer accent-crm-primary mt-2"
                   />
                   {errors.probability && <p className="text-[11px] text-rose-400 mt-0.5">{errors.probability.message}</p>}
@@ -683,9 +682,14 @@ function KanbanCard({ lead, onEdit, onDelete }: CardProps) {
             {/* Overlay indicators can be replaced by normal cards actions. */}
           </div>
         </div>
-        <div className="text-[10px] text-crm-muted font-medium flex items-center gap-1 leading-none">
-          <Building className="h-3 w-3 text-indigo-400 shrink-0" />
-          <span className="truncate">{lead.customer?.company || "Unassigned"}</span>
+        <div className="text-[10px] text-crm-muted font-medium flex flex-col gap-1 leading-tight">
+          <div className="flex items-center gap-1">
+            <span className="font-semibold text-slate-200 truncate">{lead.customer?.name || "Unassigned"}</span>
+          </div>
+          <div className="flex items-center gap-1 text-[9px]">
+            <Building className="h-2.5 w-2.5 text-indigo-400 shrink-0" />
+            <span className="truncate">{lead.customer?.company || "N/A"}</span>
+          </div>
         </div>
       </div>
 

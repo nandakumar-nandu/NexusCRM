@@ -9,7 +9,7 @@ export interface Lead {
   stage: 'New' | 'Contacted' | 'Qualified' | 'Proposal' | 'Closed';
   probability: number;
   expected_close_date: string;
-  notes: string;
+  notes?: string;
   created_by?: string;
   created_at?: string;
   customer?: Customer; // Nested profile reference
@@ -138,9 +138,9 @@ export const leadsService = {
 
     if (error) throw error;
     
-    return (data || []).map((lead: any) => ({
+    return ((data || []) as unknown as Lead[]).map((lead) => ({
       ...lead,
-      customer: lead.customer as Customer
+      customer: lead.customer
     }));
   },
 
@@ -214,7 +214,8 @@ export const leadsService = {
     }
 
     const supabase = createBrowserClient();
-    const { customer, ...dbPayload } = lead as any;
+    const dbPayload = { ...lead };
+    delete dbPayload.customer;
 
     const { data, error } = await supabase
       .from('leads')

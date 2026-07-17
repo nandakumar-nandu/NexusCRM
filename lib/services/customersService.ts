@@ -69,6 +69,28 @@ function saveMockCustomers(customers: Customer[]) {
  */
 export const customersService = {
   /**
+   * Retrieve a single customer record by ID.
+   */
+  async getCustomer(id: string): Promise<Customer> {
+    if (isDemoSandbox()) {
+      const list = getMockCustomers();
+      const record = list.find(c => c.id === id);
+      if (!record) throw new Error("Customer not found");
+      return record;
+    }
+
+    const supabase = createBrowserClient();
+    const { data, error } = await supabase
+      .from('customers')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error) throw error;
+    return data as Customer;
+  },
+
+  /**
    * Fetch a paginated, searched, and filtered list of customers.
    * 
    * @param page - Current active index page (starts at 1)
