@@ -21,7 +21,7 @@ A **Customer Relationship Management (CRM)** platform is a software system desig
 | Feature Module | Description | Status |
 | :--- | :--- | :--- |
 | **Dashboard Metrics** | Consolidated view of customer counts, active leads, tasks, and sales value. | 🚧 UI Scaffold (Static Mock) |
-| **Customer Directory** | A central repository for company accounts, email records, and phones. | 🚧 UI Scaffold (Static Mock) |
+| **Customer Directory** | A central repository for company accounts, email records, and phones. | ✅ Active (Full CRUD, Search, RLS) |
 | **Leads Kanban Board** | Visual board organizing deals by sales stages (New, Proposal, Negotiation). | 🚧 UI Scaffold (Static Mock) |
 | **Task Scheduler** | Focus-oriented tracker for pending tasks, alerts, and customer check-ins. | 🚧 UI Scaffold (Static Mock) |
 | **Reports & Charts** | Bar graphs representing revenue progression and category breakdowns. | 🚧 UI Scaffold (Static Mock) |
@@ -40,6 +40,20 @@ NexusCRM implements secure session tracking using **Supabase Auth** and Next.js 
 2. **Session Verification**: The root `middleware.ts` intercepts requests to dashboard pages, verifying session cookies in real-time. If expired, tokens are refreshed at the edge layer. Unauthenticated visitors are routed to `/login`.
 3. **Demo Sandbox Mode**: For zero-config local testing, developers can bypass database setups by clicking the **Demo Sandbox** option. This saves a temporary `nexus-demo-session=true` cookie and local profiles in standard browser storage, simulating active user sessions.
 4. **Session Hydration**: The layout Sidebar listens to auth state changes reactively, displaying name initials or custom avatar images and offering logout triggers.
+
+---
+
+## Managing Customers (CRUD)
+
+Sales representatives can build and structure customer indexes using the **Customers** module.
+
+### Core Functions:
+1. **Customer Search & Filters**: Active query matches against contact names, corporate companies, and email records. Filters restrict grids by pipeline stages (Lead, Active, Inactive).
+2. **Paginated Data Table**: Pre-rendered rows offset 10 records per page, limiting rendering footprints.
+3. **Add Customer Modal**: Uses client-side `react-hook-form` validation backed by `zod` schema constraints (contact name and company are strictly required).
+4. **Edit Customer Panel**: Slides-over from the right viewport, letting users modify emails, phones, custom tags, and interaction history.
+5. **Delete Safety Prompt**: A modal verification prompts the user to double check before execution.
+6. **Row-Level Security (RLS)**: The database is secured with RLS policies, ensuring each authenticated sales representative can only view and edit their own customers. In demo sandbox mode, records are isolated within the browser's `localStorage` namespace.
 
 ---
 

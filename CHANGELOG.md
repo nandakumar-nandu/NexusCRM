@@ -2,6 +2,16 @@
 
 All notable changes to the NexusCRM project will be documented in this file.
 
+## [0.3.0] - 2026-07-17 16:02
+
+### Added
+- SQL migration script `/lib/db/001_customers.sql` defining customers table schema and setting up Row Level Security (RLS) policies.
+- Form management and schema validation library dependencies (`react-hook-form`, `zod`, `@hookform/resolvers`).
+- Modular client-side customer service handler (`/lib/services/customersService.ts`) supporting pagination, filter matching, and local sandbox cache CRUD fallback.
+- Interactive paginated data tables for customers lists inside `/app/(dashboard)/customers/page.tsx`.
+- Visually rich customer registration modal and slide-out edit drawer panels configured with Zod schema resolution validation checks.
+- Delete customer safety prompt dialogs.
+
 ## [0.2.0] - 2026-07-17 15:54
 
 ### Added

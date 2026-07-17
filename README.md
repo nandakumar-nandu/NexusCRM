@@ -69,7 +69,11 @@ erDiagram
         string email
         string phone
         string status
+        string_array tags
+        string notes
+        uuid created_by FK
         timestamp created_at
+        timestamp updated_at
     }
     LEADS {
         uuid id PK
