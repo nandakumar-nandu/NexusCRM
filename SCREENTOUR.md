@@ -11,8 +11,9 @@ This tour describes the layout screens available in this initial scaffold versio
    - **Primary Action**: "Sign In" button or "Explore Demo Sandbox" trigger.
 
 2. **Dashboard Overview (`/`)**
-   - **Main Display**: General summary stats, recent pipeline logs list, conversion indicators, user avatar footer logouts.
-   - **Primary Action**: "New Lead" button.
+   - **Main Display**: 4 KPI cards (Total Customers count, Open Deals financial value sum, Tasks due today count, and Opportunity Win Rate percentage). Sales funnel bar chart representing financial allocations. Tasks closure donut chart with inner completion percentage display. Customer growth trend line chart using monotone bezier curve mapping.
+   - **Recent Activity Feed**: Consolidated listing of the 5 most recent customer creations, task progress updates, and deal changes.
+   - **Primary Action**: "New Opportunity" navigation button directing to the Leads Pipeline.
 
 3. **Customers Directory (`/customers`)**
    - **Main Display**: Interactive listings table displaying client names, corporate accounts, contact details, status pills, tags, and action dropdowns. Search inputs filter contacts instantly on keychange, and pagination links traverse pages.

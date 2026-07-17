@@ -2,6 +2,18 @@
 
 All notable changes to the NexusCRM project will be documented in this file.
 
+## [0.6.0] - 2026-07-17 19:15
+
+### Added
+- Modular client-side database analytics service `/lib/services/analyticsService.ts` aggregating metrics for KPI cards, sales stages values, customer growth trends, and task closure ratios.
+- Fully-featured interactive Analytics Dashboard `/app/(dashboard)/page.tsx` replacing previous mock placeholders. It incorporates:
+  - 4 dynamic KPI cards (Total Customers count, Open Deals value, Tasks due today, Win Rate percentage).
+  - Sales Funnel (Recharts BarChart) displaying allocations across deal stages.
+  - Tasks Closure Balance (Recharts PieChart) showing completed vs pending task ratios with center-aligned progress readout.
+  - Customer Growth Trend (Recharts LineChart) mapping customer profile creations.
+  - Live activity logs tracking recent updates.
+- Detailed code comments on all Recharts components detailing the visual control parameters of each chart property.
+
 ## [0.5.0] - 2026-07-17 19:00
 
 ### Added

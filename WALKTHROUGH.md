@@ -20,7 +20,7 @@ A **Customer Relationship Management (CRM)** platform is a software system desig
 
 | Feature Module | Description | Status |
 | :--- | :--- | :--- |
-| **Dashboard Metrics** | Consolidated view of customer counts, active leads, tasks, and sales value. | 🚧 UI Scaffold (Static Mock) |
+| **Dashboard Metrics** | Consolidated view of customer counts, active leads, tasks, and sales value. | ✅ Active (Full Dynamic, Recharts, RLS) |
 | **Customer Directory** | A central repository for company accounts, email records, and phones. | ✅ Active (Full CRUD, Search, RLS) |
 | **Leads Kanban Board** | Visual board organizing deals by sales stages (New, Proposal, Negotiation). | ✅ Active (Drag & Drop, Tables) |
 | **Task Scheduler** | Focus-oriented tracker for pending tasks, alerts, and customer check-ins. | ✅ Active (Full CRUD, Filters, RLS) |
@@ -40,6 +40,23 @@ NexusCRM implements secure session tracking using **Supabase Auth** and Next.js 
 2. **Session Verification**: The root `middleware.ts` intercepts requests to dashboard pages, verifying session cookies in real-time. If expired, tokens are refreshed at the edge layer. Unauthenticated visitors are routed to `/login`.
 3. **Demo Sandbox Mode**: For zero-config local testing, developers can bypass database setups by clicking the **Demo Sandbox** option. This saves a temporary `nexus-demo-session=true` cookie and local profiles in standard browser storage, simulating active user sessions.
 4. **Session Hydration**: The layout Sidebar listens to auth state changes reactively, displaying name initials or custom avatar images and offering logout triggers.
+
+---
+
+## Analytics Dashboard
+
+The **Dashboard Overview** at `/` is a dynamic hub providing key sales metrics, activity logs, and Recharts integrations.
+
+### Features & Layout:
+1. **Consolidated KPI Cards**: Monitors four essential sales indicators:
+   - **Total Customers**: The count of registered corporate customer accounts.
+   - **Open Deals Value**: The sum of deal values across active stages (excluding Closed).
+   - **Due Today**: Incomplete follow-ups set for today's deadline.
+   - **Lead Win Rate %**: Percentage conversion rate (Closed deals / Total opportunities).
+2. **Sales Funnel (Bar Chart)**: Visualizes the financial volume of opportunities across pipeline stages (New, Contacted, Qualified, Proposal, Closed) using a modern indigo theme.
+3. **Tasks Closure Balance (Donut Chart)**: Renders a radial slice representing the ratio of completed vs pending check-ins, displaying a center-aligned completion percentage.
+4. **Customer Growth Trend (Line Chart)**: Maps the monthly progression rate of new customer registrations using a smooth bezier curve.
+5. **System Activity Feed**: Consolidated list displaying the 5 latest customer additions, task changes, and deal updates.
 
 ---
 
