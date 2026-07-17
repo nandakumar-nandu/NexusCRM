@@ -22,7 +22,7 @@ A **Customer Relationship Management (CRM)** platform is a software system desig
 | :--- | :--- | :--- |
 | **Dashboard Metrics** | Consolidated view of customer counts, active leads, tasks, and sales value. | 🚧 UI Scaffold (Static Mock) |
 | **Customer Directory** | A central repository for company accounts, email records, and phones. | ✅ Active (Full CRUD, Search, RLS) |
-| **Leads Kanban Board** | Visual board organizing deals by sales stages (New, Proposal, Negotiation). | 🚧 UI Scaffold (Static Mock) |
+| **Leads Kanban Board** | Visual board organizing deals by sales stages (New, Proposal, Negotiation). | ✅ Active (Drag & Drop, Tables) |
 | **Task Scheduler** | Focus-oriented tracker for pending tasks, alerts, and customer check-ins. | 🚧 UI Scaffold (Static Mock) |
 | **Reports & Charts** | Bar graphs representing revenue progression and category breakdowns. | 🚧 UI Scaffold (Static Mock) |
 | **Settings Panel** | Form panels to manage user accounts and profile metadata. | ✅ Active (Auth Meta Updates) |
@@ -54,6 +54,19 @@ Sales representatives can build and structure customer indexes using the **Custo
 4. **Edit Customer Panel**: Slides-over from the right viewport, letting users modify emails, phones, custom tags, and interaction history.
 5. **Delete Safety Prompt**: A modal verification prompts the user to double check before execution.
 6. **Row-Level Security (RLS)**: The database is secured with RLS policies, ensuring each authenticated sales representative can only view and edit their own customers. In demo sandbox mode, records are isolated within the browser's `localStorage` namespace.
+
+---
+
+## Sales Pipeline (Leads)
+
+Sales agents track negotiations using an interactive **Kanban Board** pipeline or an alternative **List View** table grid.
+
+### Features & Architecture:
+1. **Interactive Kanban Board**: Rendered as 5 columns (New, Contacted, Qualified, Proposal, Closed). Total stages value estimates are summed dynamically.
+2. **Drag & Drop Integration**: Utilizes `@dnd-kit/core` with mouse and touch drag sensors. Dragging cards across columns automatically updates stages in the DB (or in browser localStorage caches when offline).
+3. **Alternative List View**: Toggles to a structured table listing deal names, linked client names, valuations, close target deadlines, and status levels.
+4. **Opportunity Form Modals**: Manage deal entries using Zod validation. Features customer selectors and custom range sliders for closing probabilities.
+5. **Row-Level Security (RLS) & Indexes**: Mapped with queries indexes on `customer_id`, `created_by`, and `stage` for pagination performance. Protected by Row-Level Security policies.
 
 ---
 

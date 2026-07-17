@@ -2,6 +2,16 @@
 
 All notable changes to the NexusCRM project will be documented in this file.
 
+## [0.4.0] - 2026-07-17 16:10
+
+### Added
+- SQL migration script `/lib/db/002_leads.sql` creating leads table, foreign keys, query indexes, and Row Level Security (RLS) policies.
+- Drag-and-drop support dependencies (`@dnd-kit/core`, `@dnd-kit/sortable`, `@dnd-kit/utilities`).
+- Modular client-side leads database service `/lib/services/leadsService.ts` supporting full opportunity CRUD and joined customer lookups with sandbox offline overrides.
+- Dynamic Kanban pipeline layout `/app/(dashboard)/leads/page.tsx` rendering columns corresponding to deal stages and responsive cards displaying client name, value, target close date, and probability indicators.
+- Alternative tabular List View layout toggled via visual controls.
+- Add/Edit lead modals with drop-down customer selection and probability slider forms validated using Zod.
+
 ## [0.3.0] - 2026-07-17 16:02
 
 ### Added

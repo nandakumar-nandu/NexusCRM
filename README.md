@@ -99,6 +99,20 @@ erDiagram
 
 ---
 
+## Leads Pipeline Funnel Stages
+
+```mermaid
+stateDiagram-v2
+    [*] --> New : Opportunity Created
+    New --> Contacted : Initial outreach completed
+    Contacted --> Qualified : Budget & interest validated
+    Qualified --> Proposal : Proposal/pricing draft submitted
+    Proposal --> Closed : Negotiation won / lost
+    Closed --> [*]
+```
+
+---
+
 ## Navigation Structure
 
 ```mermaid

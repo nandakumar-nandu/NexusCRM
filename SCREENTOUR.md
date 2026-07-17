@@ -21,8 +21,10 @@ This tour describes the layout screens available in this initial scaffold versio
    - **Edit Customer Panel**: Slide-over right drawer panel populated with loaded fields to edit records.
 
 4. **Leads Kanban Board (`/leads`)**
-   - **Main Display**: Columns for deal stages (New, Contacted, Proposal, Negotiation) filled with individual opportunity cards (value, client, due date).
-   - **Primary Action**: "Create Deal" button and column-specific card insertions.
+   - **Main Display**: 5 columns grouping deal stages (New, Contacted, Qualified, Proposal, Closed) with dynamically aggregated values. Individual cards display title, company name, value, target date, and closing probability.
+   - **Drag & Drop Interactions**: Representatives drag cards between columns to change opportunity stages. The interface leverages `@dnd-kit` mouse distance sensors to differentiate drag intents from simple card clicks.
+   - **Alternative List View**: Toggles the Kanban interface into a clean tabular data list presenting opportunity properties.
+   - **Primary Action**: "Create Deal" button (opens Zod-validated creation modal), card action controls (opens edit modals or delete prompts).
 
 5. **Tasks Checklist (`/tasks`)**
    - **Main Display**: Action items table showing checkbox status, linked client accounts, deadlines, and urgency level indicators.
