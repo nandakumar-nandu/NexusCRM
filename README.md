@@ -24,6 +24,34 @@ graph TD
     Client <-->|Asset Rendering| NextServer[Next.js Server App]
 ```
 
+### Authentication Flow
+
+```mermaid
+sequenceDiagram
+    actor User as User Agent
+    participant Edge as Next.js Edge Middleware
+    participant App as Next.js Server App
+    participant DB as Supabase Auth Server
+
+    User->>Edge: Request Dashboard Page (e.g., "/")
+    Edge->>Edge: Check Auth cookies / Demo Sandbox credentials
+    alt Unauthorized
+        Edge-->>User: Redirect to "/login"
+    else Authorized
+        Edge->>App: Forward Request
+        App->>DB: Validate Session / Query DB
+        DB-->>App: Database Records
+        App-->>User: Rendered Dashboard HTML Page
+    end
+
+    Note over User, DB: When Login form is submitted
+    User->>User: Enter email & password
+    User->>DB: signInWithPassword()
+    DB-->>User: Session Object + Token Cookies
+    User->>Edge: Request "/" (w/ cookies)
+    Edge-->>User: Forward and Render page
+```
+
 ---
 
 ## Planned Database Schema

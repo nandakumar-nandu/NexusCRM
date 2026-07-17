@@ -6,29 +6,33 @@ This tour describes the layout screens available in this initial scaffold versio
 
 ## Screen Inventory & Paths
 
-1. **Dashboard Overview (`/`)**
-   - **Main Display**: General summary stats, recent pipeline logs list, conversion indicators.
+1. **Login Screen (`/login`)**
+   - **Main Display**: Center-aligned login card with credential fields (email & password), and sandbox demo bypass controls.
+   - **Primary Action**: "Sign In" button or "Explore Demo Sandbox" trigger.
+
+2. **Dashboard Overview (`/`)**
+   - **Main Display**: General summary stats, recent pipeline logs list, conversion indicators, user avatar footer logouts.
    - **Primary Action**: "New Lead" button.
 
-2. **Customers Directory (`/customers`)**
+3. **Customers Directory (`/customers`)**
    - **Main Display**: Interactive listings table displaying client names, corporate accounts, contacts, and status indicators.
    - **Primary Action**: "Add Customer" button, search bar, and filter buttons.
 
-3. **Leads Kanban Board (`/leads`)**
+4. **Leads Kanban Board (`/leads`)**
    - **Main Display**: Columns for deal stages (New, Contacted, Proposal, Negotiation) filled with individual opportunity cards (value, client, due date).
    - **Primary Action**: "Create Deal" button and column-specific card insertions.
 
-4. **Tasks Checklist (`/tasks`)**
+5. **Tasks Checklist (`/tasks`)**
    - **Main Display**: Action items table showing checkbox status, linked client accounts, deadlines, and urgency level indicators.
    - **Primary Action**: "New Task" button and tab filter buttons.
 
-5. **Reports & Analytics (`/reports`)**
+6. **Reports & Analytics (`/reports`)**
    - **Main Display**: Bar charts reflecting monthly revenue progression and category breakdowns.
    - **Primary Action**: Custom date selector dropdown.
 
-6. **Settings Configuration (`/settings`)**
-   - **Main Display**: Profile parameters forms, active database connection markers, security access profiles.
-   - **Primary Action**: Left-hand tab switcher and "Save Changes" action.
+7. **Settings/Profile Screen (`/settings`)**
+   - **Main Display**: Profile parameters forms to edit display names and avatar links, active database connection markers, security access profiles.
+   - **Primary Action**: Left-hand tab switcher and "Save Changes" action to update user auth sessions.
 
 ---
 

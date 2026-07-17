@@ -25,9 +25,21 @@ A **Customer Relationship Management (CRM)** platform is a software system desig
 | **Leads Kanban Board** | Visual board organizing deals by sales stages (New, Proposal, Negotiation). | 🚧 UI Scaffold (Static Mock) |
 | **Task Scheduler** | Focus-oriented tracker for pending tasks, alerts, and customer check-ins. | 🚧 UI Scaffold (Static Mock) |
 | **Reports & Charts** | Bar graphs representing revenue progression and category breakdowns. | 🚧 UI Scaffold (Static Mock) |
-| **Settings Panel** | Form panels to manage user accounts and database connection credentials. | 🚧 UI Scaffold (Static Mock) |
+| **Settings Panel** | Form panels to manage user accounts and profile metadata. | ✅ Active (Auth Meta Updates) |
 
 *(Note: 🚧 indicates that frontend layout interfaces are established, with database sync operations and interactive hooks planned for future commits)*
+
+---
+
+## Authentication & Session Management
+
+NexusCRM implements secure session tracking using **Supabase Auth** and Next.js **Edge Middleware**. 
+
+### How Authentication Works:
+1. **User Sign In**: Logins are verified via email and password using the browser-side client (`signInWithPassword`).
+2. **Session Verification**: The root `middleware.ts` intercepts requests to dashboard pages, verifying session cookies in real-time. If expired, tokens are refreshed at the edge layer. Unauthenticated visitors are routed to `/login`.
+3. **Demo Sandbox Mode**: For zero-config local testing, developers can bypass database setups by clicking the **Demo Sandbox** option. This saves a temporary `nexus-demo-session=true` cookie and local profiles in standard browser storage, simulating active user sessions.
+4. **Session Hydration**: The layout Sidebar listens to auth state changes reactively, displaying name initials or custom avatar images and offering logout triggers.
 
 ---
 
