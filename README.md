@@ -2,6 +2,10 @@
 
 NexusCRM is a next-generation, high-performance Customer Relationship Management platform designed for B2B sales teams. Built using Next.js 14 (App Router), TypeScript, Tailwind CSS, and Supabase (PostgreSQL), it offers a fast, visually rich interface to manage customers, track active sales pipelines, schedule action-item tasks, and view revenue analytics.
 
+## Tech Stack
+
+![Next.js](https://img.shields.io/badge/Next.js-14.2.35-000000?style=flat-square&logo=nextdotjs) ![React](https://img.shields.io/badge/React-18.x-61DAFB?style=flat-square&logo=react&logoColor=black) ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat-square&logo=typescript) ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4.1-38B2AC?style=flat-square&logo=tailwindcss) ![Supabase](https://img.shields.io/badge/Supabase-2.110.4-3ECF8E?style=flat-square&logo=supabase) ![Recharts](https://img.shields.io/badge/Recharts-3.9.2-22B5BF?style=flat-square) ![PapaParse](https://img.shields.io/badge/PapaParse-5.5.4-FF8000?style=flat-square) ![next-pwa](https://img.shields.io/badge/next--pwa-5.6.0-000000?style=flat-square) ![dnd-kit](https://img.shields.io/badge/dnd--kit-6.3.1-6366F1?style=flat-square)
+
 ---
 
 ## Feature Overview
