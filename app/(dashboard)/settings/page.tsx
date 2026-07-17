@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
+import { roleService, type UserRole } from "@/lib/services/roleService";
 import { 
   User, 
   Database, 
@@ -18,6 +19,7 @@ export default function SettingsPage() {
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [email, setEmail] = useState("");
+  const [role, setRole] = useState<UserRole>("viewer");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -27,6 +29,13 @@ export default function SettingsPage() {
     const supabase = createClient();
     
     const loadProfile = async () => {
+      try {
+        const currentRole = await roleService.getUserRole();
+        setRole(currentRole);
+      } catch (e) {
+        console.error("Failed to load user role:", e);
+      }
+
       // Check for real session
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
@@ -56,6 +65,9 @@ export default function SettingsPage() {
     setError(null);
 
     try {
+      // Save current role level
+      await roleService.setUserRole(role);
+
       if (isDemoMode) {
         // Sandbox local storage mode
         localStorage.setItem("nexus-profile-name", displayName);
@@ -156,6 +168,22 @@ export default function SettingsPage() {
                   placeholder="https://example.com/avatar.jpg"
                   className="w-full rounded-lg border border-crm-border bg-crm-card/50 px-3.5 py-2 text-sm text-white outline-none focus:border-crm-primary focus:bg-crm-card" 
                 />
+              </div>
+
+              <div className="space-y-1.5 sm:col-span-2">
+                <label className="text-xs font-semibold text-crm-muted">Security Role Level</label>
+                <select
+                  value={role}
+                  onChange={(e) => setRole(e.target.value as UserRole)}
+                  className="w-full rounded-lg border border-crm-border bg-crm-card/50 px-3.5 py-2 text-sm text-white outline-none focus:border-crm-primary focus:bg-crm-card"
+                >
+                  <option value="viewer">Viewer (Read-only)</option>
+                  <option value="manager">Manager (Edit, No Delete)</option>
+                  <option value="admin">Admin (Full Access)</option>
+                </select>
+                <p className="text-[10px] text-crm-muted mt-1">
+                  Determines your access capabilities and database permissions.
+                </p>
               </div>
 
               <div className="space-y-1.5">

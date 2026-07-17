@@ -105,6 +105,16 @@ erDiagram
     }
 ```
 
+## Security & Role-Based Access Control (RBAC)
+
+NexusCRM enforces three access roles to govern data modifications and dashboard behaviors:
+
+| Access Role | View Listings / Analytics | Add / Edit Records | Delete Records |
+| :--- | :---: | :---: | :---: |
+| **Viewer** | ✅ Yes | ❌ No | ❌ No |
+| **Manager** | ✅ Yes | ✅ Yes | ❌ No |
+| **Admin** | ✅ Yes | ✅ Yes | ✅ Yes |
+
 ---
 
 ## Leads Pipeline Funnel Stages

@@ -99,6 +99,28 @@ NexusCRM provides a centralized **Tasks Checklist** dashboard and a comprehensiv
 4. **Chronological Activity Timeline**: Rendered on the Customer Detail view (`/customers/[id]`), this panel aggregates linked customer notes, tasks creation/completion timestamps, and deal creation records in reverse chronological order.
 5. **Add Customer Note**: Form elements let reps save custom notes directly onto the customer's timeline in real-time.
 
+
+---
+
+## Security & User Roles (RBAC)
+
+NexusCRM implements a strict Row-Level Security (RLS) and client-side UI permission mask based on user roles:
+1. **User Roles Schema (`public.user_roles`)**: Maps Supabase users to one of three security roles: `admin`, `manager`, or `viewer`.
+2. **Access Control Policies**:
+   - **Viewer (Read-only)**: Has SELECT access on data tables. Edit and delete actions are hidden in the interface, and Kanban board card drag-and-drop operations are disabled.
+   - **Manager (Read & Write)**: Has SELECT, INSERT, and UPDATE capabilities to create and modify records. Delete buttons are hidden.
+   - **Admin (Full Control)**: Has full access to SELECT, INSERT, UPDATE, and DELETE operations.
+3. **Role Testing Switcher**: The Settings screen includes an interactive dropdown selector allowing developers to test various visual behaviors and database write permissions under each role tier instantly.
+
+---
+
+## Offline Support & Progressive Web App (PWA)
+
+NexusCRM is configured as an installable Progressive Web App (PWA) to ensure usability under spotty network connections.
+1. **PWA Shell (`next-pwa`)**: Configured with workbox service worker compilation. Automatically caches critical site resources (styles, pages, script bundles).
+2. **Installability**: Meets PWA requirements on both mobile (Android/iOS) and desktop (Chrome/Safari) browsers, enabling home screen shortcuts and offline launches.
+3. **Offline Fallback Page (`/offline`)**: Served automatically when network connection drops, informing the user that the application has switched to local Sandbox cache mode. All edits made offline are written to the browser's localStorage cache.
+
 ---
 
 ## User Workflow Diagram

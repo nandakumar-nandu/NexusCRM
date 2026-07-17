@@ -36,8 +36,11 @@ import {
   AlertTriangle,
   Clock,
   MoreVertical,
-  ChevronDown
+  ChevronDown,
+  Download
 } from "lucide-react";
+import { roleService, type UserRole } from "@/lib/services/roleService";
+import Papa from "papaparse";
 
 // Form Validation Schema using Zod
 const leadFormSchema = z.object({
@@ -109,6 +112,49 @@ export default function LeadsPage() {
     fetchLeadsAndCustomers();
   }, [fetchLeadsAndCustomers]);
 
+  const [role, setRole] = useState<UserRole>("viewer");
+
+  // Load and listen to role updates
+  useEffect(() => {
+    const fetchRole = async () => {
+      const currentRole = await roleService.getUserRole();
+      setRole(currentRole);
+    };
+    fetchRole();
+
+    window.addEventListener("role-change", fetchRole);
+    return () => window.removeEventListener("role-change", fetchRole);
+  }, []);
+
+  // Comments explaining CSV Export logic:
+  // 1. Fetches current deals/opportunities list.
+  // 2. Maps database fields (title, company, value, stage, probability, date) to structured headers.
+  // 3. Serializes json array to csv formatted string using Papa.unparse().
+  // 4. Downloads generated csv text file instantly in the browser.
+  const handleExportCSV = () => {
+    const csvData = leads.map(l => ({
+      Title: l.title,
+      Customer: l.customer?.name || "Unassigned",
+      Company: l.customer?.company || "N/A",
+      Value: l.value,
+      Stage: l.stage,
+      Probability: `${l.probability}%`,
+      "Expected Close Date": l.expected_close_date,
+      Notes: l.notes || ""
+    }));
+
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `nexus-leads-${new Date().toISOString().split("T")[0]}.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   // React Hook Form for Lead modal
   const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<LeadFormData>({
     resolver: zodResolver(leadFormSchema),
@@ -117,6 +163,7 @@ export default function LeadsPage() {
 
   // Handle Drag and Drop End
   const handleDragEnd = async (event: DragEndEvent) => {
+    if (role === "viewer") return;
     const { active, over } = event;
     if (!over) return;
 
@@ -264,12 +311,22 @@ export default function LeadsPage() {
             </button>
           </div>
           <button 
-            onClick={handleOpenAdd}
-            className="flex items-center gap-2 rounded-lg bg-crm-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-crm-primary/20 transition-all hover:bg-indigo-500 hover:-translate-y-0.5"
+            onClick={handleExportCSV}
+            className="flex items-center gap-2 rounded-lg border border-crm-border bg-crm-cardHover px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-crm-card hover:-translate-y-0.5"
           >
-            <Plus className="h-4 w-4" />
-            <span>Create Deal</span>
+            <Download className="h-4 w-4 text-indigo-400" />
+            <span>Export CSV</span>
           </button>
+
+          {role !== "viewer" && (
+            <button 
+              onClick={handleOpenAdd}
+              className="flex items-center gap-2 rounded-lg bg-crm-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-crm-primary/20 transition-all hover:bg-indigo-500 hover:-translate-y-0.5"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Create Deal</span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -318,6 +375,7 @@ export default function LeadsPage() {
                         lead={lead}
                         onEdit={handleOpenEdit}
                         onDelete={handleOpenDelete}
+                        role={role}
                       />
                     ))
                   )}
@@ -391,38 +449,43 @@ export default function LeadsPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right overflow-visible">
-                        <div className="relative inline-block text-left">
-                          <button 
-                            onClick={() => setActionDropdownOpen(actionDropdownOpen === lead.id ? null : lead.id)}
-                            className="rounded-lg p-1 text-crm-muted hover:bg-crm-cardHover hover:text-white transition-colors"
-                          >
-                            <MoreVertical className="h-4.5 w-4.5" />
-                          </button>
-                          
-                          {actionDropdownOpen === lead.id && (
-                            <>
-                              <div className="fixed inset-0 z-30" onClick={() => setActionDropdownOpen(null)} />
-                              <div className="absolute right-0 mt-1 w-32 origin-top-right rounded-lg bg-crm-card border border-crm-border shadow-lg z-40">
-                                <div className="py-1">
-                                  <button
-                                    onClick={() => handleOpenEdit(lead)}
-                                    className="flex w-full items-center gap-2 px-3.5 py-2 text-xs text-slate-300 hover:bg-crm-cardHover hover:text-white transition-all"
-                                  >
-                                    <Edit2 className="h-3.5 w-3.5 text-indigo-400" />
-                                    Edit deal
-                                  </button>
-                                  <button
-                                    onClick={() => handleOpenDelete(lead)}
-                                    className="flex w-full items-center gap-2 px-3.5 py-2 text-xs text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-all"
-                                  >
-                                    <Trash2 className="h-3.5 w-3.5 text-rose-500" />
-                                    Delete deal
-                                  </button>
+                        {role !== "viewer" && (
+                          <div className="relative inline-block text-left">
+                            <button 
+                              onClick={() => setActionDropdownOpen(actionDropdownOpen === lead.id ? null : lead.id)}
+                              className="rounded-lg p-1 text-crm-muted hover:bg-crm-cardHover hover:text-white transition-colors"
+                            >
+                              <MoreVertical className="h-4.5 w-4.5" />
+                            </button>
+                            
+                            {actionDropdownOpen === lead.id && (
+                              <>
+                                <div className="fixed inset-0 z-30" onClick={() => setActionDropdownOpen(null)} />
+                                <div className="absolute right-0 mt-1 w-32 origin-top-right rounded-lg bg-crm-card border border-crm-border shadow-lg z-40">
+                                  <div className="py-1">
+                                    <button
+                                      onClick={() => handleOpenEdit(lead)}
+                                      className="flex w-full items-center gap-2 px-3.5 py-2 text-xs text-slate-300 hover:bg-crm-cardHover hover:text-white transition-all"
+                                    >
+                                      <Edit2 className="h-3.5 w-3.5 text-indigo-400" />
+                                      Edit deal
+                                    </button>
+                                    
+                                    {role === "admin" && (
+                                      <button
+                                        onClick={() => handleOpenDelete(lead)}
+                                        className="flex w-full items-center gap-2 px-3.5 py-2 text-xs text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-all"
+                                      >
+                                        <Trash2 className="h-3.5 w-3.5 text-rose-500" />
+                                        Delete deal
+                                      </button>
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
-                            </>
-                          )}
-                        </div>
+                              </>
+                            )}
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))
@@ -651,9 +714,10 @@ interface CardProps {
   lead: Lead;
   onEdit: (lead: Lead) => void;
   onDelete: (lead: Lead) => void;
+  role: UserRole;
 }
 
-function KanbanCard({ lead, onEdit, onDelete }: CardProps) {
+function KanbanCard({ lead, onEdit, onDelete, role }: CardProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
     id: lead.id,
   });
@@ -662,16 +726,19 @@ function KanbanCard({ lead, onEdit, onDelete }: CardProps) {
     transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
   } : undefined;
 
+  const dragProps = role !== "viewer" ? { ...attributes, ...listeners } : {};
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
-      {...listeners}
+      {...dragProps}
       className={`glass-panel border p-3 rounded-lg flex flex-col justify-between h-36 relative select-none ${
         isDragging 
           ? 'opacity-40 border-crm-primary/50 shadow-2xl scale-95 cursor-grabbing z-40' 
-          : 'border-crm-border/40 hover:border-crm-border/80 shadow-sm cursor-grab active:cursor-grabbing hover:bg-crm-cardHover/10 transition-colors duration-150'
+          : `border-crm-border/40 hover:border-crm-border/80 shadow-sm ${
+              role !== "viewer" ? "cursor-grab active:cursor-grabbing hover:bg-crm-cardHover/10" : ""
+            } transition-colors duration-150`
       }`}
     >
       <div className="space-y-1">
@@ -708,24 +775,28 @@ function KanbanCard({ lead, onEdit, onDelete }: CardProps) {
           <span className="truncate">{lead.expected_close_date}</span>
           
           <div className="flex gap-1.5 z-20">
-            <button
-              onClick={(e) => {
-                e.stopPropagation(); // Stop dnd drag events
-                onEdit(lead);
-              }}
-              className="text-crm-muted hover:text-indigo-400 p-0.5 rounded transition-colors"
-            >
-              <Edit2 className="h-3 w-3" />
-            </button>
-            <button
-              onClick={(e) => {
-                e.stopPropagation(); // Stop dnd drag events
-                onDelete(lead);
-              }}
-              className="text-crm-muted hover:text-rose-400 p-0.5 rounded transition-colors"
-            >
-              <Trash2 className="h-3 w-3" />
-            </button>
+            {role !== "viewer" && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Stop dnd drag events
+                  onEdit(lead);
+                }}
+                className="text-crm-muted hover:text-indigo-400 p-0.5 rounded transition-colors"
+              >
+                <Edit2 className="h-3.5 w-3.5" />
+              </button>
+            )}
+            {role === "admin" && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Stop dnd drag events
+                  onDelete(lead);
+                }}
+                className="text-crm-muted hover:text-rose-400 p-0.5 rounded transition-colors"
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+              </button>
+            )}
           </div>
         </div>
       </div>

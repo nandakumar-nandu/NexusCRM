@@ -46,6 +46,13 @@ This tour describes the layout screens available in this initial scaffold versio
    - **Main Display**: Profile parameters forms to edit display names and avatar links, active database connection markers, security access profiles.
    - **Primary Action**: Left-hand tab switcher and "Save Changes" action to update user auth sessions.
 
+## Security & Role-Based UI Tour
+
+NexusCRM dynamically updates its interfaces depending on the active user role:
+- **Viewer Role**: Hides all creation buttons (e.g., "Add Customer", "Create Deal"). Disables card drag-and-drop handles on the Kanban board. Restricts all table action menu items, providing a read-only list.
+- **Manager Role**: Displays creation buttons and allows editing. Kanban drag-and-drop updates are enabled. Hides all "Delete" actions across all list dropdowns and details views.
+- **Admin Role**: Full user interface access with all buttons, editing controls, drag capabilities, and deletion actions visible and enabled.
+
 ---
 
 ## Screen Navigation Map

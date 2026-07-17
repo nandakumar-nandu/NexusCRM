@@ -22,8 +22,11 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  AlertTriangle
+  AlertTriangle,
+  Download
 } from "lucide-react";
+import { roleService, type UserRole } from "@/lib/services/roleService";
+import Papa from "papaparse";
 
 // Form Validation Schema using Zod
 const customerFormSchema = z.object({
@@ -71,6 +74,48 @@ export default function CustomersPage() {
   useEffect(() => {
     fetchCustomers();
   }, [fetchCustomers]);
+
+  const [role, setRole] = useState<UserRole>("viewer");
+
+  // Load and listen to role updates
+  useEffect(() => {
+    const fetchRole = async () => {
+      const currentRole = await roleService.getUserRole();
+      setRole(currentRole);
+    };
+    fetchRole();
+
+    window.addEventListener("role-change", fetchRole);
+    return () => window.removeEventListener("role-change", fetchRole);
+  }, []);
+
+  // Comments explaining CSV Export logic:
+  // 1. Gathers currently loaded customers from page search result queries.
+  // 2. Maps custom columns names to the output headers.
+  // 3. Runs Papa.unparse() to serialize the records to a raw CSV format.
+  // 4. Instantly downloads the CSV file inside user's client browser session.
+  const handleExportCSV = () => {
+    const csvData = customers.map(c => ({
+      Name: c.name,
+      Company: c.company,
+      Email: c.email || "",
+      Phone: c.phone || "",
+      Status: c.status,
+      Tags: (c.tags || []).join(", "),
+      Notes: c.notes || ""
+    }));
+
+    const csv = Papa.unparse(csvData);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `nexus-customers-${new Date().toISOString().split("T")[0]}.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   // Forms Hook initialization
   const { register: registerAdd, handleSubmit: handleSubmitAdd, reset: resetAdd, formState: { errors: errorsAdd } } = useForm<CustomerFormData>({
@@ -184,13 +229,25 @@ export default function CustomersPage() {
             Manage your accounts, contact information, and relationships.
           </p>
         </div>
-        <button 
-          onClick={() => setIsAddOpen(true)}
-          className="flex items-center gap-2 rounded-lg bg-crm-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-crm-primary/20 transition-all duration-200 hover:bg-indigo-500 hover:-translate-y-0.5"
-        >
-          <Plus className="h-4 w-4" />
-          <span>Add Customer</span>
-        </button>
+        <div className="flex flex-wrap gap-3">
+          <button 
+            onClick={handleExportCSV}
+            className="flex items-center gap-2 rounded-lg border border-crm-border bg-crm-cardHover px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-crm-card hover:-translate-y-0.5"
+          >
+            <Download className="h-4 w-4 text-indigo-400" />
+            <span>Export CSV</span>
+          </button>
+          
+          {role !== "viewer" && (
+            <button 
+              onClick={() => setIsAddOpen(true)}
+              className="flex items-center gap-2 rounded-lg bg-crm-primary px-4 py-2 text-sm font-semibold text-white shadow-lg shadow-crm-primary/20 transition-all duration-200 hover:bg-indigo-500 hover:-translate-y-0.5"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Add Customer</span>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Control Panel */}
@@ -307,35 +364,42 @@ export default function CustomersPage() {
                     </td>
                     <td className="px-6 py-4 text-right overflow-visible">
                       <div className="relative inline-block text-left">
-                        <button 
-                          onClick={() => setActionDropdownOpen(actionDropdownOpen === customer.id ? null : customer.id)}
-                          className="rounded-lg p-1 text-crm-muted hover:bg-crm-cardHover hover:text-white transition-colors"
-                        >
-                          <MoreVertical className="h-4.5 w-4.5" />
-                        </button>
-                        
-                        {actionDropdownOpen === customer.id && (
-                          <>
-                            <div className="fixed inset-0 z-30" onClick={() => setActionDropdownOpen(null)} />
-                            <div className="absolute right-0 mt-1 w-32 origin-top-right rounded-lg bg-crm-card border border-crm-border shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-40">
-                              <div className="py-1">
-                                <button
-                                  onClick={() => handleOpenEdit(customer)}
-                                  className="flex w-full items-center gap-2 px-3.5 py-2 text-xs text-slate-300 hover:bg-crm-cardHover hover:text-white transition-colors"
-                                >
-                                  <Edit2 className="h-3.5 w-3.5 text-indigo-400" />
-                                  Edit details
-                                </button>
-                                <button
-                                  onClick={() => handleOpenDelete(customer)}
-                                  className="flex w-full items-center gap-2 px-3.5 py-2 text-xs text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-colors"
-                                >
-                                  <Trash2 className="h-3.5 w-3.5 text-rose-500" />
-                                  Delete client
-                                </button>
-                              </div>
-                            </div>
-                          </>
+                        {role !== "viewer" && (
+                          <div className="relative">
+                            <button 
+                              onClick={() => setActionDropdownOpen(actionDropdownOpen === customer.id ? null : customer.id)}
+                              className="rounded-lg p-1 text-crm-muted hover:bg-crm-cardHover hover:text-white transition-colors"
+                            >
+                              <MoreVertical className="h-4.5 w-4.5" />
+                            </button>
+                            
+                            {actionDropdownOpen === customer.id && (
+                              <>
+                                <div className="fixed inset-0 z-30" onClick={() => setActionDropdownOpen(null)} />
+                                <div className="absolute right-0 mt-1 w-32 origin-top-right rounded-lg bg-crm-card border border-crm-border shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-40">
+                                  <div className="py-1">
+                                    <button
+                                      onClick={() => handleOpenEdit(customer)}
+                                      className="flex w-full items-center gap-2 px-3.5 py-2 text-xs text-slate-300 hover:bg-crm-cardHover hover:text-white transition-colors"
+                                    >
+                                      <Edit2 className="h-3.5 w-3.5 text-indigo-400" />
+                                      Edit details
+                                    </button>
+                                    
+                                    {role === "admin" && (
+                                      <button
+                                        onClick={() => handleOpenDelete(customer)}
+                                        className="flex w-full items-center gap-2 px-3.5 py-2 text-xs text-rose-400 hover:bg-rose-500/10 hover:text-rose-300 transition-colors"
+                                      >
+                                        <Trash2 className="h-3.5 w-3.5 text-rose-500" />
+                                        Delete client
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              </>
+                            )}
+                          </div>
                         )}
                       </div>
                     </td>

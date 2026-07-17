@@ -10,6 +10,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "NexusCRM - Enterprise Relationship Management Platform",
   description: "Next-generation customer relationship management platform for high-growth enterprises.",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
