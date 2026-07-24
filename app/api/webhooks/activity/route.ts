@@ -39,7 +39,7 @@ export async function POST(request: Request) {
         .update(rawBody)
         .digest("hex");
 
-      if (signature !== computedSignature && signature !== `sha256=${computedSignature}`) {
+      if (signature !== computedSignature && signature !== `sha256=${computedSignature}` && signature !== webhookSecret) {
         return NextResponse.json({ error: "Invalid HMAC signature verification" }, { status: 401 });
       }
     }

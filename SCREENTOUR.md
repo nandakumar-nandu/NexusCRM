@@ -60,6 +60,29 @@ This tour describes the layout screens available in this initial scaffold versio
 11. **Mention Autocomplete (`MentionTextarea.tsx`)**
     - **Main Display**: Floating autocomplete menu triggered when typing `@` in notes or task comments, matching handles like `@sarah` or `@david`.
 
+12. **Email Notification Settings (`/settings/email`)**
+    - **Main Display**: Notification channel toggles stored in `user_preferences` JSONB column (Welcome Emails, Task Reminders, Deal Updates, Weekly Digest).
+    - **Primary Action**: "Save Preferences" button and "Send Test Email" trigger.
+
+13. **Custom Report Builder Wizard Steps 1–4 (`/reports/builder`)**
+    - **Main Display**: Interactive 4-step wizard card (Source Select ➡️ Columns Select ➡️ Filter Rules ➡️ Output Execution).
+    - **Primary Action**: Next/Previous step navigation, "Run Report", "Download CSV", and "Save Template".
+
+14. **My Saved Reports (`/reports`)**
+    - **Main Display**: List of saved custom report configurations with source tags, schedule indicators, and creation dates.
+    - **Primary Action**: "Run", "Edit", and "Delete" actions.
+
+15. **Developer API Keys (`/settings/api`)**
+    - **Main Display**: Data table listing generated Bearer API key previews (`nx_live_8f3a...`), granted scope permission pills, last used timestamps, and expiration dates.
+    - **Primary Action**: "Generate New Key" modal trigger, "Revoke" button, and link to interactive API docs.
+
+16. **Generate API Key Modal (`/settings/api`)**
+    - **Main Display**: Key generation modal featuring permission scope checkboxes, expiration dropdown, and a **One-Time Secret Reveal** dialog.
+    - **Primary Action**: "Copy Token" button.
+
+17. **In-App API Reference Docs (`/settings/api/docs`)**
+    - **Main Display**: Co-located interactive API documentation featuring endpoint resource sidebar, HTTP method badges, path URLs, parameter definitions, JSON response examples, and "Copy as cURL" buttons.
+
 ## Security & Role-Based UI Tour
 
 NexusCRM dynamically updates its interfaces depending on the active user role:
@@ -83,6 +106,19 @@ graph TD
     Sidebar -->|Navigate| P3["Leads Page (/leads)"]
     Sidebar -->|Navigate| P4["Tasks Page (/tasks)"]
     Sidebar -->|Navigate| P5["Notifications Page (/notifications)"]
+    Sidebar -->|Navigate| P6["Reports & Builder (/reports & /reports/builder)"]
+    Sidebar -->|Navigate| P7["Settings, Email & API Keys (/settings, /settings/email, /settings/api)"]
+```
+
+---
+
+## Settings & API Sub-Navigation Map
+
+```mermaid
+graph TD
+    Settings[Settings Overview /settings] --> Email[Email Settings /settings/email]
+    Settings --> API[API Keys Management /settings/api]
+    API --> Docs[Interactive API Reference /settings/api/docs]
 ```
 
 ---

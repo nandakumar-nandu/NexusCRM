@@ -147,6 +147,41 @@ NexusCRM maintains an immutable audit log tracking all database operations and e
 
 ---
 
+## Email Notifications & Automation
+
+NexusCRM integrates transactional email dispatch using Resend and React Email templates.
+
+### Features & Architecture:
+1. **Resend REST Integration**: Edge-compatible transactional email client (`/lib/email/resendClient.ts`) operating via HTTPS REST API requests instead of blocking TCP sockets.
+2. **React Email Templates**: Inline-styled responsive HTML templates (`WelcomeCustomerEmail.tsx`, `TaskReminderEmail.tsx`, `DealClosedEmail.tsx`, `WeeklyReportEmail.tsx`).
+3. **Automated Edge Function Crons**: Supabase Deno Edge Functions (`daily-task-reminders` and `weekly-report-sender`) scheduled via `pg_cron` (`0 8 * * *` and `0 7 * * 1`) invoke database RPC summaries and dispatch automated email digests.
+4. **Email Preferences Settings**: Toggle notification channels stored in `user_preferences` JSONB column with instant test email triggers (`/settings/email`).
+
+---
+
+## Custom Report Builder
+
+NexusCRM features a 4-step interactive wizard enabling custom dataset exports and saved reporting templates.
+
+### Features & Architecture:
+1. **4-Step Guided Wizard (`/reports/builder`)**: Step 1 (Resource Selection) ➡️ Step 2 (Columns Selection) ➡️ Step 3 (Filter Rules) ➡️ Step 4 (Export/CSV Download).
+2. **SQL Injection Prevention**: Built using a strict Whitelist approach (`customers`, `leads`, `tasks`, `activity_log`) and parameterized Supabase Query Builders (`eq`, `ilike`, `gt`, `lt`), avoiding raw SQL string concatenation.
+3. **CSV Export & Template Persistence**: Exports filtered query results to CSV via `PapaParse` and saves custom report definitions in `saved_reports` JSONB table configurations.
+
+---
+
+## Developer REST API v1 & Key Management
+
+NexusCRM exposes a public Bearer-authenticated REST API for third-party integrations, Zapier webhooks, and automation scripts.
+
+### Features & Architecture:
+1. **Hashed API Key Security (`public.api_keys`)**: Raw keys (`nx_live_...`) are generated once and hashed using `bcrypt` before storage. Only key previews (`nx_live_8f3a...`) are stored in plaintext.
+2. **One-Time Secret Reveal**: The Settings API panel (`/settings/api`) presents new secret keys inside a one-time copy modal.
+3. **Scoped Bearer Auth Middleware (`apiKeyAuth.ts`)**: Validates Bearer tokens and checks granular scope permissions (`read:customers`, `write:leads`, `execute:reports`, etc.).
+4. **Interactive In-App API Reference (`/settings/api/docs`)**: Co-located endpoint documentation featuring cURL snippets, query parameters, response JSON payloads, and one-click copy controls.
+
+---
+
 ## User Workflow Diagram
 
 ```mermaid

@@ -1,6 +1,35 @@
-# NexusCRM - Enterprise Customer Relationship Management
+<div align="center">
+  <img src="public/icon-192x192.png" width="72" alt="NexusCRM Logo" />
+  <h1>✨ Nexus<span style="color: #38bdf8;">CRM</span></h1>
+  <p><b>Enterprise Customer Relationship Management Platform</b></p>
+</div>
+
+---
 
 NexusCRM is a next-generation, high-performance Customer Relationship Management platform designed for B2B sales teams. Built using Next.js 14 (App Router), TypeScript, Tailwind CSS, and Supabase (PostgreSQL), it offers a fast, visually rich interface to manage customers, track active sales pipelines, schedule action-item tasks, and view revenue analytics.
+
+## Screens
+
+| SignIn | Dashboard | Customers |
+|---|---|---|
+| ![SignIn](public/screenshots/SignIn.png) | ![Dashboard](public/screenshots/Dashboard.png) | ![Customers](public/screenshots/Customers.png) |
+
+| Tasks | Leads | Reports |
+|---|---|---|
+| ![Tasks](public/screenshots/Tasks.png) | ![Leads](public/screenshots/Leads.png) | ![Reports](public/screenshots/Reports.png) |
+
+---
+
+## 🌐 Live Demo
+
+Experience the live deployment of NexusCRM:
+
+🔗 **[https://www.nexuscrm.kpebble.com](https://www.nexuscrm.kpebble.com)**
+
+> [!TIP]
+> Click **"Explore Demo Sandbox (No Config Needed)"** on the sign-in page to instantly test all CRM features, Kanban drag-and-drop, custom report builders, and developer API management without creating an account!
+
+---
 
 ## Tech Stack
 
@@ -76,6 +105,71 @@ sequenceDiagram
     Bell-->>User: Update Unread Badge Count & Dropdown Item
 ```
 
+### Transactional Email Send Flow
+
+```mermaid
+sequenceDiagram
+    actor App as Next.js App / Cron Worker
+    participant API as Email Route (/api/email/send)
+    participant Template as React Email Template
+    participant Resend as Resend REST API
+    actor Client as Recipient Email Inbox
+
+    App->>API: POST /api/email/send (template, payload)
+    API->>API: Validate Session / RBAC + Zod Body
+    API->>Template: Render JSX to Inline HTML
+    API->>Resend: HTTPS POST /emails (API Key)
+    Resend-->>Client: Deliver Email to Inbox
+```
+
+### Developer REST API Request Lifecycle
+
+```mermaid
+sequenceDiagram
+    actor Script as Integration Script (cURL / Python)
+    participant Auth as API Key Auth Middleware
+    participant DB as Postgres API Keys Table
+    participant Route as API v1 Route Handler
+
+    Script->>Auth: Request (Bearer nx_live_...)
+    Auth->>DB: Lookup key_preview & Fetch key_hash
+    Auth->>Auth: bcrypt.compare(rawKey, key_hash)
+    alt Invalid or Lacks Permission Scope
+        Auth-->>Script: HTTP 401 / 403 JSON Error
+    else Valid & Authorized
+        Auth->>Route: Pass Context & Execute Query
+        Route-->>Script: HTTP 200 OK (ApiResponse<T>)
+    end
+```
+
+---
+
+## Transactional Email Events
+
+| Template | Trigger Condition | Recipient | Render Engine |
+| :--- | :--- | :--- | :--- |
+| `WelcomeCustomerEmail` | New customer profile added | Registered Customer | React Email + Resend |
+| `TaskReminderEmail` | Daily 08:00 UTC pg_cron task scan | Task Assignee | React Email + Resend |
+| `DealClosedEmail` | Sales lead stage moved to Closed/Won | Account Lead / Manager | React Email + Resend |
+| `WeeklyReportEmail` | Monday 07:00 UTC pg_cron KPI brief | Executives & Managers | React Email + Resend |
+
+---
+
+## Developer REST API v1 Endpoints
+
+| Resource | Method | Path | Required Scope | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| Customers | `GET` | `/api/v1/customers` | `read:customers` | List & search customer profiles |
+| Customers | `POST` | `/api/v1/customers` | `write:customers` | Create new customer profile |
+| Customers | `GET` | `/api/v1/customers/:id` | `read:customers` | Retrieve customer profile by ID |
+| Customers | `PUT` | `/api/v1/customers/:id` | `write:customers` | Update customer record |
+| Customers | `DELETE` | `/api/v1/customers/:id` | `delete:customers` | Delete customer record |
+| Leads | `GET` | `/api/v1/leads` | `read:leads` | List sales pipeline deals |
+| Leads | `POST` | `/api/v1/leads` | `write:leads` | Create new deal |
+| Tasks | `GET` | `/api/v1/tasks` | `read:tasks` | List assigned tasks |
+| Tasks | `POST` | `/api/v1/tasks` | `write:tasks` | Create new task item |
+| Reports | `POST` | `/api/v1/reports/run` | `execute:reports` | Run custom report config headlessly |
+
 ---
 
 ## Planned Database Schema
@@ -88,6 +182,9 @@ erDiagram
     CUSTOMERS ||--o{ CUSTOMER_NOTES : references
     USERS ||--o{ NOTIFICATIONS : receives
     USERS ||--o{ ACTIVITY_LOG : triggers
+    USERS ||--o{ USER_PREFERENCES : configures
+    USERS ||--o{ SAVED_REPORTS : creates
+    USERS ||--o{ API_KEYS : generates
     
     CUSTOMERS {
         uuid id PK
@@ -147,6 +244,31 @@ erDiagram
         string action
         jsonb diff
         timestamp occurred_at
+    }
+    USER_PREFERENCES {
+        uuid id PK
+        uuid user_id FK
+        jsonb email_preferences
+        timestamp updated_at
+    }
+    SAVED_REPORTS {
+        uuid id PK
+        string name
+        jsonb config
+        uuid created_by FK
+        string schedule
+        timestamp created_at
+    }
+    API_KEYS {
+        uuid id PK
+        uuid user_id FK
+        string name
+        string key_hash
+        string key_preview
+        string_array permissions
+        timestamp last_used_at
+        timestamp expires_at
+        timestamp created_at
     }
 ```
 

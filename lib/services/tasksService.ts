@@ -196,6 +196,14 @@ export const tasksService = {
   },
 
   /**
+   * Retrieve a single task item by ID.
+   */
+  async getTask(id: string): Promise<Task | undefined> {
+    const tasks = await this.getTasks();
+    return tasks.find((t) => t.id === id);
+  },
+
+  /**
    * Create a new task.
    */
   async createTask(task: Omit<Task, 'id' | 'created_at' | 'customer' | 'lead'>): Promise<Task> {

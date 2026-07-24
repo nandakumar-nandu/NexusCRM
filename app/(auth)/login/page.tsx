@@ -43,9 +43,8 @@ export default function LoginPage() {
     setLoading(true);
     // Set a client-side mock session cookie valid for 1 day
     document.cookie = "nexus-demo-session=true; path=/; max-age=86400";
-    // Redirect to dashboard
-    router.push("/");
-    router.refresh();
+    // Force hard navigation so Next.js middleware reads the new cookie
+    window.location.href = "/";
   };
 
   return (

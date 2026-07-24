@@ -145,6 +145,14 @@ export const leadsService = {
   },
 
   /**
+   * Retrieve a single lead deal record by ID.
+   */
+  async getLead(id: string): Promise<Lead | undefined> {
+    const leads = await this.getLeads();
+    return leads.find((l) => l.id === id);
+  },
+
+  /**
    * Create a new sales lead.
    */
   async createLead(lead: Omit<Lead, 'id' | 'created_at' | 'customer'>): Promise<Lead> {

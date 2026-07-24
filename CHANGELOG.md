@@ -2,6 +2,23 @@
 
 All notable changes to the NexusCRM project will be documented in this file.
 
+## [1.2.0] - 2026-07-24 14:00
+
+### Added
+- Resend + React Email integration for transactional email delivery (`/lib/email/resendClient.ts` and `emailService.ts`).
+- React Email templates: `WelcomeCustomerEmail.tsx`, `TaskReminderEmail.tsx`, `DealClosedEmail.tsx`, and `WeeklyReportEmail.tsx`.
+- Internal email API route (`/app/api/email/send/route.ts`) with RBAC authorization and Zod payload validation.
+- Email preferences settings page (`/app/(dashboard)/settings/email/page.tsx`) with test email triggers.
+- SQL migrations `006_user_preferences.sql` and `007_user_preferences.sql` adding `email_preferences` JSONB column.
+- Supabase Edge Functions in Deno (`daily-task-reminders` and `weekly-report-sender`) configured for pg_cron execution (`0 8 * * *` and `0 7 * * 1`).
+- PostgreSQL RPC migration `007_rpc_weekly_kpi.sql` and `008_rpc_weekly_kpi.sql` with SECURITY DEFINER `get_weekly_kpi_snapshot()`.
+- 4-step Custom Report Builder wizard (`/app/(dashboard)/reports/builder/page.tsx`) supporting whitelist query building, CSV downloads, and template saving.
+- Report Builder service `reportBuilderService.ts` and SQL migration `008_saved_reports.sql` / `009_saved_reports.sql`.
+- Public Developer REST API v1 endpoints under `/app/api/v1/` for Customers, Leads, Tasks, and Headless Report Execution.
+- Bearer API key authentication middleware (`/lib/middleware/apiKeyAuth.ts`), standardized API types (`/types/api.ts`), and SQL migration `009_api_keys.sql` / `010_api_keys.sql` using bcrypt hashing.
+- API Keys management UI (`/app/(dashboard)/settings/api/page.tsx`) with one-time raw secret key reveal pattern.
+- In-app interactive developer reference documentation (`/app/(dashboard)/settings/api/docs/page.tsx`) with cURL copy functionality.
+
 ## [1.1.0] - 2026-07-24 13:48
 
 ### Added
