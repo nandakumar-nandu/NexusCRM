@@ -56,6 +56,26 @@ sequenceDiagram
     Edge-->>User: Forward and Render page
 ```
 
+### Real-Time Webhook & Notification Flow
+
+```mermaid
+sequenceDiagram
+    actor User as User Agent / Rep
+    participant DB as PostgreSQL Database
+    participant Hook as Webhook Route (/api/webhooks/activity)
+    participant Log as Activity Log Table
+    participant Notif as Notifications Table
+    participant Bell as TopBar Notification Bell
+
+    User->>DB: Perform Action (e.g. Update Lead Stage)
+    DB->>Hook: Trigger Database Webhook Event (POST)
+    Hook->>Hook: Verify HMAC Signature & Deduplicate Event
+    Hook->>Log: Write Audit Trail (JSONB Diff)
+    Hook->>Notif: Create Notification Entry
+    Notif-->>Bell: Realtime Subscription Broadcast
+    Bell-->>User: Update Unread Badge Count & Dropdown Item
+```
+
 ---
 
 ## Planned Database Schema
@@ -66,6 +86,8 @@ erDiagram
     CUSTOMERS ||--o{ TASKS : references
     LEADS ||--o{ TASKS : references
     CUSTOMERS ||--o{ CUSTOMER_NOTES : references
+    USERS ||--o{ NOTIFICATIONS : receives
+    USERS ||--o{ ACTIVITY_LOG : triggers
     
     CUSTOMERS {
         uuid id PK
@@ -106,6 +128,25 @@ erDiagram
         string content
         uuid created_by FK
         timestamp created_at
+    }
+    NOTIFICATIONS {
+        uuid id PK
+        uuid user_id FK
+        string type
+        string title
+        string body
+        string link
+        boolean is_read
+        timestamp created_at
+    }
+    ACTIVITY_LOG {
+        uuid id PK
+        uuid actor_id FK
+        string entity_type
+        string entity_id
+        string action
+        jsonb diff
+        timestamp occurred_at
     }
 ```
 

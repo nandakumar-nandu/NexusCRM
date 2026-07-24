@@ -2,6 +2,19 @@
 
 All notable changes to the NexusCRM project will be documented in this file.
 
+## [1.1.0] - 2026-07-24 13:48
+
+### Added
+- Real-time Supabase database event subscription hooks (`useRealtimeCustomers.ts` and `useRealtimeLeads.ts`) providing live table updates.
+- Real-time user online presence tracking hook (`usePresence.ts`) and avatar presence bubbles component (`PresenceIndicators.tsx`).
+- SQL migration scripts `/lib/db/004_notifications.sql` and `/lib/db/005_notifications.sql` creating user notifications table with RLS security policies.
+- SQL migration scripts `/lib/db/005_activity_log.sql` and `/lib/db/006_activity_log.sql` creating append-only immutable audit trail table with JSONB diff fields and 90-day retention comments.
+- Client services layer `notificationsService.ts` and `activityLogService.ts` with JSDoc comments and offline sandbox fallbacks.
+- Supabase Database Webhook HTTP route `/app/api/webhooks/activity/route.ts` with HMAC-SHA256 signature verification and idempotency deduplication.
+- Notification bell component (`NotificationBell.tsx`) embedded into TopBar with live unread badge counters and quick dropdown list.
+- Notifications Center page (`/app/(dashboard)/notifications/page.tsx`) with category tabs (`All`, `Unread`, `Mentions`) and pagination.
+- `@` Mention parser hook (`useMentionParser.ts`) and autocomplete textarea component (`MentionTextarea.tsx`).
+
 ## [1.0.0] - 2026-07-17 19:35
 
 ### Added

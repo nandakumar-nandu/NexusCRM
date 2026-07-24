@@ -123,6 +123,30 @@ NexusCRM is configured as an installable Progressive Web App (PWA) to ensure usa
 
 ---
 
+## Real-time Collaboration & Notifications
+
+NexusCRM connects sales teams with real-time websocket synchronization and notifications.
+
+### Features & Architecture:
+1. **Real-time Table Subscriptions**: `useRealtimeCustomers` and `useRealtimeLeads` listen to PostgreSQL `postgres_changes` events. When a customer or lead record is added or modified by one user, other active browser sessions update immediately without page refreshes.
+2. **Team Presence Indicators**: `usePresence` tracks active user sessions in Supabase Realtime presence channels. Connected team member avatars are rendered dynamically in the TopBar layout header.
+3. **Notification Bell Dropdown**: The TopBar notification bell (`NotificationBell.tsx`) shows live unread badge counters and renders the 5 latest alerts in a popover menu.
+4. **Notifications Center (`/notifications`)**: Dedicated workspace route allowing users to view, search, and filter notifications by category (`All`, `Unread`, `Mentions`), mark items as read, or navigate to target entity pages.
+5. `@` **Mention Autocomplete**: The `MentionTextarea.tsx` component parses `@username` handles using regular expressions, displaying an overlay menu to tag teammates and generate mention alerts.
+
+---
+
+## Activity Log & Audit Trail
+
+NexusCRM maintains an immutable audit log tracking all database operations and entity modifications.
+
+### Features & Architecture:
+1. **Append-only Audit Schema (`public.activity_log`)**: Stores `actor_id`, `entity_type`, `entity_id`, `action`, `diff` (JSONB format), and `occurred_at`. Security policies strictly forbid UPDATE and DELETE operations to guarantee tamper-proof records.
+2. **JSONB Diff Storage**: Captures property mutations dynamically without requiring rigid DB column migrations.
+3. **Database Webhooks Integration**: Supabase Database Webhooks invoke the HMAC-signed `/api/webhooks/activity` HTTP endpoint on database writes, parsing change diffs, populating audit trails, and dispatching targeted user alerts.
+
+---
+
 ## User Workflow Diagram
 
 ```mermaid

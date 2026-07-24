@@ -46,6 +46,20 @@ This tour describes the layout screens available in this initial scaffold versio
    - **Main Display**: Profile parameters forms to edit display names and avatar links, active database connection markers, security access profiles.
    - **Primary Action**: Left-hand tab switcher and "Save Changes" action to update user auth sessions.
 
+8. **Notification Bell (`TopBar.tsx`)**
+   - **Main Display**: TopBar header icon displaying real-time unread badge counts and a popover menu showing the 5 most recent notifications.
+   - **Primary Action**: "Mark all as read" button and "View all notifications" link to `/notifications`.
+
+9. **Notifications Center (`/notifications`)**
+   - **Main Display**: Dedicated workspace page presenting all system alerts, deal stage changes, and teammate `@mentions`.
+   - **Primary Action**: Filter tabs (`All`, `Unread`, `Mentions`), "Mark all as read" header action, "Navigate" deep-link triggers, and infinite scroll pagination.
+
+10. **Team Presence Indicators (`TopBar.tsx`)**
+    - **Main Display**: Real-time user avatar bubbles displaying active teammates currently online in the workspace.
+
+11. **Mention Autocomplete (`MentionTextarea.tsx`)**
+    - **Main Display**: Floating autocomplete menu triggered when typing `@` in notes or task comments, matching handles like `@sarah` or `@david`.
+
 ## Security & Role-Based UI Tour
 
 NexusCRM dynamically updates its interfaces depending on the active user role:
@@ -68,6 +82,21 @@ graph TD
     Sidebar -->|Navigate| P2["Customers Page (/customers)"]
     Sidebar -->|Navigate| P3["Leads Page (/leads)"]
     Sidebar -->|Navigate| P4["Tasks Page (/tasks)"]
+    Sidebar -->|Navigate| P5["Notifications Page (/notifications)"]
+```
+
+---
+
+## Real-Time Notification & Event Flow
+
+```mermaid
+graph TD
+    Trigger[DB Write / Webhook Event] --> NotifService[Notifications Service]
+    NotifService --> Realtime[Supabase Realtime Channel]
+    Realtime --> Bell[Notification Bell Badge]
+    Realtime --> Center[Notifications Center /notifications]
+    Bell --> Dropdown[5 Recent Alerts Dropdown]
+```
     Sidebar -->|Navigate| P5["Reports Page (/reports)"]
     Sidebar -->|Navigate| P6["Settings Page (/settings)"]
     

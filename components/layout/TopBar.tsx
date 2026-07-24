@@ -1,4 +1,8 @@
-import { Search, Bell, HelpCircle, ChevronDown } from "lucide-react";
+"use client";
+
+import { Search, HelpCircle, ChevronDown } from "lucide-react";
+import NotificationBell from "./NotificationBell";
+import PresenceIndicators from "./PresenceIndicators";
 
 export default function TopBar() {
   return (
@@ -17,16 +21,16 @@ export default function TopBar() {
 
       {/* Action Items */}
       <div className="flex items-center gap-4">
+        {/* Live Team Presence */}
+        <PresenceIndicators />
+
         {/* Support */}
         <button className="flex h-9 w-9 items-center justify-center rounded-lg text-crm-muted transition-colors duration-200 hover:bg-crm-cardHover hover:text-white">
           <HelpCircle className="h-5 w-5" />
         </button>
 
-        {/* Notifications */}
-        <button className="relative flex h-9 w-9 items-center justify-center rounded-lg text-crm-muted transition-colors duration-200 hover:bg-crm-cardHover hover:text-white">
-          <Bell className="h-5 w-5" />
-          <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-crm-accent animate-pulse"></span>
-        </button>
+        {/* Real-time Notifications Bell */}
+        <NotificationBell />
 
         {/* Divider */}
         <div className="h-6 w-px bg-crm-border"></div>
