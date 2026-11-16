@@ -172,26 +172,38 @@ sequenceDiagram
 
 ---
 
-## Planned Database Schema
+## Database Schema
 
 ```mermaid
 erDiagram
-    CUSTOMERS ||--o{ LEADS : owns
-    CUSTOMERS ||--o{ TASKS : references
-    LEADS ||--o{ TASKS : references
-    CUSTOMERS ||--o{ CUSTOMER_NOTES : references
-    USERS ||--o{ NOTIFICATIONS : receives
-    USERS ||--o{ ACTIVITY_LOG : triggers
-    USERS ||--o{ USER_PREFERENCES : configures
-    USERS ||--o{ SAVED_REPORTS : creates
-    USERS ||--o{ API_KEYS : generates
-    
+    CUSTOMERS ||--o{ LEADS : "owns"
+    CUSTOMERS ||--o{ TASKS : "references"
+    LEADS ||--o{ TASKS : "references"
+    CUSTOMERS ||--o{ CUSTOMER_NOTES : "references"
+    USERS ||--o{ CUSTOMERS : "creates"
+    USERS ||--o{ LEADS : "creates"
+    USERS ||--o{ TASKS : "creates"
+    USERS ||--o{ CUSTOMER_NOTES : "authors"
+    USERS ||--o| USER_ROLES : "assigned"
+    USERS ||--o{ NOTIFICATIONS : "receives"
+    USERS ||--o{ ACTIVITY_LOG : "triggers"
+    USERS ||--o| USER_PREFERENCES : "configures"
+    USERS ||--o{ SAVED_REPORTS : "creates"
+    USERS ||--o{ API_KEYS : "generates"
+
+    USERS {
+        uuid id PK
+    }
+    USER_ROLES {
+        uuid user_id PK, FK
+        string role
+    }
     CUSTOMERS {
         uuid id PK
         string name
-        string company
         string email
         string phone
+        string company
         string status
         string_array tags
         string notes
@@ -205,6 +217,9 @@ erDiagram
         uuid customer_id FK
         numeric value
         string stage
+        int probability
+        date expected_close_date
+        string notes
         uuid created_by FK
         timestamp created_at
     }
@@ -247,7 +262,7 @@ erDiagram
     }
     USER_PREFERENCES {
         uuid id PK
-        uuid user_id FK
+        uuid user_id FK, UK
         jsonb email_preferences
         timestamp updated_at
     }
@@ -257,6 +272,8 @@ erDiagram
         jsonb config
         uuid created_by FK
         string schedule
+        string_array schedule_recipients
+        timestamp last_run_at
         timestamp created_at
     }
     API_KEYS {

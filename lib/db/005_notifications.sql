@@ -1,4 +1,4 @@
--- SQL Migration: 005_notifications.sql (and 004_notifications.sql)
+-- SQL Migration: 005_notifications.sql
 -- Description: Create public.notifications table, configure RLS security policies, and performance indexes.
 
 -- Create Notifications Table

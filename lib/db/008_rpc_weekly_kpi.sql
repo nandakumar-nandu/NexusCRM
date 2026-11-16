@@ -1,6 +1,30 @@
 -- SQL Migration: 008_rpc_weekly_kpi.sql
 -- Description: PostgreSQL RPC function get_weekly_kpi_snapshot() and pg_cron schedule setup.
 
+/**
+ * ARCHITECTURAL & TECHNICAL DESIGN COMMENTS:
+ * 
+ * 1. Why RPC Instead of App-Side Aggregation?
+ *    Executing SUM(), COUNT(), and AVG() aggregations in Application Code (Node.js/Next.js) requires fetching thousands 
+ *    of raw table rows over WAN network sockets. PostgreSQL RPC functions execute directly in C-optimized database memory,
+ *    reducing network payload transfer overhead from megabytes to a single compact JSONB payload.
+ * 
+ * 2. How pg_cron Scheduling Works:
+ *    PostgreSQL pg_cron extension allows scheduling recurring SQL commands directly inside the database process.
+ *    Example:
+ *      SELECT cron.schedule('daily-task-reminders-job', '0 8 * * *', $$
+ *        SELECT net.http_post(url:='https://<project-id>.supabase.co/functions/v1/daily-task-reminders')
+ *      $$);
+ * 
+ * 3. Cron Expression Breakdown:
+ *    - '0 8 * * *' : 0 = Minute 0, 8 = 8 AM UTC, * = Every Day of Month, * = Every Month, * = Every Day of Week.
+ *    - '0 7 * * 1' : 0 = Minute 0, 7 = 7 AM UTC, * = Every Day of Month, * = Every Month, 1 = Monday.
+ * 
+ * 4. Why Service Role Key is Used in Edge Functions:
+ *    Background cron tasks do not have an active user browser JWT session. The Service Role Key allows background workers 
+ *    to authenticate securely with elevated admin privileges bypassing Row Level Security.
+ */
+
 CREATE OR REPLACE FUNCTION public.get_weekly_kpi_snapshot(target_user_id UUID DEFAULT NULL)
 RETURNS JSONB
 LANGUAGE plpgsql
@@ -47,4 +71,5 @@ BEGIN
 END;
 $$;
 
-COMMENT ON FUNCTION public.get_weekly_kpi_snapshot(UUID) IS 'Returns JSONB summary of weekly sales performance metrics.';
+COMMENT ON FUNCTION public.get_weekly_kpi_snapshot(UUID) IS 'Returns JSONB summary of weekly sales performance metrics (total customers, open pipeline value, completed tasks, win rate).';
+
